@@ -17,7 +17,7 @@ namespace Sintaxis_1
         }
         public void match(string contenido)
         {
-            if (contenido == getContenido())
+            if (contenido == Contenido)
             {
                 nextToken();
             }
@@ -28,7 +28,7 @@ namespace Sintaxis_1
         }
         public void match(Tipos clasificacion)
         {
-            if (clasificacion == getClasificacion())
+            if (clasificacion == Clasificacion)
             {
                 nextToken();
             }

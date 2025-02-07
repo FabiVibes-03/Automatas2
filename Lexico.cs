@@ -228,43 +228,43 @@ namespace Sintaxis_1
         {
             switch (estado)
             {
-                case 1: setClasificacion(Tipos.Identificador); break;
+                case 1: Clasificacion = Tipos.Identificador; break;
                 case 2:
                 case 3:
                 case 4:
-                case 5:
+                case 5:  //Creo que asi se hacia
                 case 6:
-                case 7: setClasificacion(Tipos.Numero); break;
-                case 8: setClasificacion(Tipos.FinSentencia); break;
-                case 9: setClasificacion(Tipos.InicioBloque); break;
-                case 10: setClasificacion(Tipos.FinBloque); break;
-                case 11: setClasificacion(Tipos.OperadorTernario); break;
-                case 12: setClasificacion(Tipos.OperadorTermino); break;
-                case 13: setClasificacion(Tipos.IncrementoTermino); break;
-                case 14: setClasificacion(Tipos.OperadorTermino); break;
-                case 15: setClasificacion(Tipos.Puntero); break;
-                case 16: setClasificacion(Tipos.OperadorFactor); break;
-                case 17: setClasificacion(Tipos.IncrementoFactor); break;
-                case 18: setClasificacion(Tipos.Caracter); break;
-                case 19: setClasificacion(Tipos.OperadorLogico); break;
-                case 20: setClasificacion(Tipos.Caracter); break;
-                case 21: setClasificacion(Tipos.OperadorLogico); break;
-                case 22: setClasificacion(Tipos.OperadorRelacional); break;
-                case 23: setClasificacion(Tipos.Asignacion); break;
+                case 7: Clasificacion =Tipos.Numero; break;
+                case 8: Clasificacion = Tipos.FinSentencia; break;
+                case 9: Clasificacion = Tipos.InicioBloque; break;
+                case 10: Clasificacion = Tipos.FinBloque; break;
+                case 11: Clasificacion = Tipos.OperadorTernario; break;
+                case 12: Clasificacion = Tipos.OperadorTermino; break;
+                case 13: Clasificacion = Tipos.IncrementoTermino; break;
+                case 14: Clasificacion = Tipos.OperadorTermino; break;
+                case 15: Clasificacion = Tipos.Puntero; break;
+                case 16: Clasificacion = Tipos.OperadorFactor; break;
+                case 17: Clasificacion = Tipos.IncrementoFactor; break;
+                case 18: Clasificacion = Tipos.Caracter; break;
+                case 19: Clasificacion = Tipos.OperadorLogico; break;
+                case 20: Clasificacion = Tipos.Caracter; break;
+                case 21: Clasificacion = Tipos.OperadorLogico; break;
+                case 22: Clasificacion = Tipos.OperadorRelacional; break;
+                case 23: Clasificacion = Tipos.Asignacion; break;
                 case 24:
                 case 25:
-                case 26: setClasificacion(Tipos.OperadorRelacional); break;
+                case 26: Clasificacion = Tipos.OperadorRelacional; break;
                 case 27:
-                case 28: setClasificacion(Tipos.Cadena); break;
+                case 28: Clasificacion = Tipos.Cadena; break;
                 case 29:
                 case 30:
                 case 31:
                 case 32:
-                case 33: setClasificacion(Tipos.Caracter); break;
+                case 33: Clasificacion = Tipos.Caracter; break;
                 case 34:
                 case 35:
                 case 36:
-                case 37: setClasificacion(Tipos.OperadorFactor); break;
+                case 37: Clasificacion = Tipos.OperadorFactor; break;
             }
         }
         public void nextToken()
@@ -301,15 +301,15 @@ namespace Sintaxis_1
             }
             if (estado == E)
             {
-                if (getClasificacion() == Tipos.Cadena)
+                if (Clasificacion == Tipos.Cadena)
                 {
                     throw new Error("léxico, se esperaba un cierre de cadena", log, linea, columna);
                 }
-                else if (getClasificacion() == Tipos.Caracter)
+                else if (Clasificacion == Tipos.Caracter)
                 {
                     throw new Error("léxico, se esperaba un cierre de comilla simple", log, linea, columna);
                 }
-                else if (getClasificacion() == Tipos.Numero)
+                else if (Clasificacion == Tipos.Numero)
                 {
                     throw new Error("léxico, se esperaba un dígito", log, linea, columna);
                 }
@@ -318,28 +318,28 @@ namespace Sintaxis_1
                     throw new Error("léxico, se espera fin de comentario", log, linea, columna);
                 }
             }
-            setContenido(buffer);
+            Contenido = buffer;
             if (!finArchivo())
             {
-                if (getClasificacion() == Tipos.Identificador)
+                if (Clasificacion == Tipos.Identificador)
                 {
-                    switch (getContenido())
+                    switch (Contenido)
                     {
                         case "char":
                         case "int":
                         case "float":
-                            setClasificacion(Tipos.TipoDato);
+                            Clasificacion = Tipos.TipoDato;
                             break;
                         case "if":
                         case "else":
                         case "do":
                         case "while":
                         case "for":
-                            setClasificacion(Tipos.PalabraReservada);
+                            Clasificacion = Tipos.PalabraReservada;
                             break;
                     }
                 }
-                //log.WriteLine(getContenido() + " = " + getClasificacion());
+                //log.WriteLine(Contenido + " = " + Clasificacion);
             }
         }
         public bool finArchivo()

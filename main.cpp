@@ -5,12 +5,18 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
-  //char e = 256;
-  int a = Console.ReadLine();
-  int b = 3;
-  int c = a + b;
+  /*char e = 256;
+  char e = 1 / 2;
+  int a = 255;
+  char b = 255;
+  b++;
+  char b = 1;
+  //char c = (char) (a) + (float) (b);
 
+*/
 /*
+int c = 7;
+
   if(c != 5) {
     Console.WriteLine("La suma es distinta de 5");
 
@@ -22,6 +28,8 @@ static void Main(string[] args)
   } else {
     Console.WriteLine("La suma de a + b = " + c);
   }
+
+  */
   int b = Console.ReadLine();
   int a = (3 + 5) * 8 - (10 - 2*b) / b; // 61
   a--;
@@ -43,6 +51,7 @@ static void Main(string[] args)
     }
   }
 
+  /*
   if(a % 2 != 0) {
     Console.WriteLine("Es impar " + a);
     if(b == 2) {
