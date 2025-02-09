@@ -23,37 +23,7 @@ namespace Sintaxis_1
             contenido = "";
             clasificacion = Tipos.Identificador;
         }
-
-        public string Contenido
-        {
-            get { return contenido; }
-            set { contenido = value; }
-        }
-
-        public Tipos Clasificacion
-        {
-            get { return clasificacion; }
-            set { clasificacion = value; }
-        }
-
-        /*
-        public void setContenido(string contenido)
-        {
-            this.contenido = contenido;
-        }
-        public void setClasificacion(Tipos clasificacion)
-        {
-            this.clasificacion = clasificacion;
-        }
-        public string getContenido()
-        {
-            return this.contenido;
-        }
-        public Tipos getClasificacion()
-        {
-            return this.clasificacion;
-        }
-
-        */
+        public string Contenido { get; set; }
+        public Tipos Clasificacion { get; set; }
     }
 }

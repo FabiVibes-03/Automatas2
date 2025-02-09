@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
-
   int b = Console.ReadLine();
   int a = (3 + 5) * 8 - (10 - 2*b) / b; // 61
   a--;
@@ -13,6 +12,7 @@ static void Main(string[] args)
   a*=2;
   a--;
   a-=99;
+//Esto es para ver que pasa
 
   int n = 5;
 
@@ -40,5 +40,4 @@ static void Main(string[] args)
   } else {
     Console.WriteLine("Es impar");
   }
-
 }

@@ -14,54 +14,52 @@ namespace Sintaxis_1
 {
     public class Lexico : Token, IDisposable
     {
-        public StreamReader archivo; //Leer un archivo
-        public StreamWriter log; // Archivo para escribir
-        public StreamWriter asm; //Archivo para generar
-        public int linea = 1;
-        const int F = -1; //Estado final ACEPTADO
-        const int E = -2; //Estado final ERROR
-        public int columna = 1;
-
-        //Matriz 
-        int[,] TRAND = {
-            {0,1,2,33,1,12,14,8,9,10,11,23,16,16,18,20,21,26,25,27,29,32,34,0,F,33},
-            {F,1,1,F,1,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,2,3,5,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {E,E,4,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E},
-            {F,F,4,F,5,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {E,E,7,E,E,6,6,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E},
-            {E,E,7,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E},
-            {F,F,7,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,13,F,F,F,F,F,13,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,13,F,F,F,F,13,F,F,F,F,F,F,15,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,17,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,19,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,19,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,22,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,24,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,24,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,24,F,F,F,F,F,F,24,F,F,F,F,F,F,F},
-            {27,27,7,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,27,28,27,27,27,27,E,27},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30,30},
-            {E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,E,31,E,E,E,E,E},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,32,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F,F},
-            {F,F,F,F,F,F,F,F,F,F,F,17,36,F,F,F,F,F,F,F,F,F,35,F,F,F},
-            {35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,0,35,35},
-            {36,36,36,36,36,36,36,36,36,36,36,36,37,36,36,36,36,36,36,36,36,36,36,36,E,36},
-            {36,36,36,36,36,36,36,36,36,36,36,36,37,36,36,36,36,36,36,36,36,36,0,36,E,36},
+        public StreamReader archivo; //Archivo de entrada
+        public StreamWriter log; //Archivo de salida
+        public StreamWriter asm; //Archivo de salida
+        public int linea = 1; //Número de línea
+        const int F = -1; //Estado de aceptación final
+        const int E = -2; //Estado de error
+        public int columna = 1; //Número de columna
+        readonly int[,] TRAND = {
+            {  0,  1,  2, 33,  1, 12, 14,  8,  9, 10, 11, 23, 16, 16, 18, 20, 21, 26, 25, 27, 29, 32, 34,  0,  F, 33  },
+            {  F,  1,  1,  F,  1,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  2,  3,  5,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  E,  E,  4,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E  },
+            {  F,  F,  4,  F,  5,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  E,  E,  7,  E,  E,  6,  6,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E  },
+            {  E,  E,  7,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E  },
+            {  F,  F,  7,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F, 13,  F,  F,  F,  F,  F, 13,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F, 13,  F,  F,  F,  F, 13,  F,  F,  F,  F,  F,  F, 15,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 17,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 19,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 19,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 22,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 24,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 24,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 24,  F,  F,  F,  F,  F,  F, 24,  F,  F,  F,  F,  F,  F,  F  },
+            { 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 27, 28, 27, 27, 27, 27,  E, 27  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            { 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30  },
+            {  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E,  E, 31,  E,  E,  E,  E,  E  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F, 32,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F  },
+            {  F,  F,  F,  F,  F,  F,  F,  F,  F,  F,  F, 17, 36,  F,  F,  F,  F,  F,  F,  F,  F,  F, 35,  F,  F,  F  },
+            { 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35, 35,  0, 35, 35  },
+            { 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 37, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36, 36,  E, 36  },
+            { 36, 36, 36, 36, 36, 36, 35, 36, 36, 36, 36, 36, 37, 36, 36, 36, 36, 36, 36, 36, 36, 36,  0, 36,  E, 36  }
         };
 
         public Lexico()
@@ -79,8 +77,7 @@ namespace Sintaxis_1
                 throw new Error("El archivo prueba.cpp no existe", log);
             }
         }
-
-        public Lexico(string nombreArchivo)
+        public Lexico(string nombreArchivo = "prueba.cpp")
         {
 
             string nombreArchivoWithoutExt = Path.GetFileNameWithoutExtension(nombreArchivo);   /* Obtenemos el nombre del archivo sin la extensión para poder crear el .log y .asm */
@@ -114,115 +111,145 @@ namespace Sintaxis_1
 
         private int Columna(char c)
         {
-            //int columna;
-            if (c == '\n')
+            /*  //int columna;
+             if (c == '\n')
+             {
+                 return 23;
+             }
+             else if (finArchivo())
+             {
+                 return 24;
+             }
+             else if (char.IsWhiteSpace(c))
+             {
+                 return 0;
+             }
+             else if (char.ToLower(c) == 'e')
+             {
+                 return 4;
+             }
+             else if (char.IsLetter(c))
+             {
+                 return 1;
+             }
+             else if (char.IsDigit(c))
+             {
+                 return 2;
+             }
+             else if (c == '.')
+             {
+                 return 3;
+             }
+             else if (c == '+')
+             {
+                 return 5;
+             }
+             else if (c == '-')
+             {
+                 return 6;
+             }
+             else if (c == ';')
+             {
+                 return 7;
+             }
+             else if (c == '{')
+             {
+                 return 8;
+             }
+             else if (c == '}')
+             {
+                 return 9;
+             }
+             else if (c == '?')
+             {
+                 return 10;
+             }
+             else if (c == '=')
+             {
+                 return 11;
+             }
+             else if (c == '*')
+             {
+                 return 12;
+             }
+             else if (c == '%')
+             {
+                 return 13;
+             }
+             else if (c == '&')
+             {
+                 return 14;
+             }
+             else if (c == '|')
+             {
+                 return 15;
+             }
+             else if (c == '!')
+             {
+                 return 16;
+             }
+             else if (c == '<')
+             {
+                 return 17;
+             }
+             else if (c == '>')
+             {
+                 return 18;
+             }
+             else if (c == '"')
+             {
+                 return 19;
+             }
+             else if (c == '\'')
+             {
+                 return 20;
+             }
+             else if (c == '#')
+             {
+                 return 21;
+             }
+             else if (c == '/')
+             {
+                 return 22;
+             }
+             else if (c == '\n')
+             {
+                 return 23;
+             }
+             else
+             {
+                 return 25;
+             } */
+
+            return c switch
             {
-                return 23;
-            }
-            else if (finArchivo())
-            {
-                return 24;
-            }
-            else if (char.IsWhiteSpace(c))
-            {
-                return 0;
-            }
-            else if (char.ToLower(c) == 'e')
-            {
-                return 4;
-            }
-            else if (char.IsLetter(c))
-            {
-                return 1;
-            }
-            else if (char.IsDigit(c))
-            {
-                return 2;
-            }
-            else if (c == '.')
-            {
-                return 3;
-            }
-            else if (c == '+')
-            {
-                return 5;
-            }
-            else if (c == '-')
-            {
-                return 6;
-            }
-            else if (c == ';')
-            {
-                return 7;
-            }
-            else if (c == '{')
-            {
-                return 8;
-            }
-            else if (c == '}')
-            {
-                return 9;
-            }
-            else if (c == '?')
-            {
-                return 10;
-            }
-            else if (c == '=')
-            {
-                return 11;
-            }
-            else if (c == '*')
-            {
-                return 12;
-            }
-            else if (c == '%')
-            {
-                return 13;
-            }
-            else if (c == '&')
-            {
-                return 14;
-            }
-            else if (c == '|')
-            {
-                return 15;
-            }
-            else if (c == '!')
-            {
-                return 16;
-            }
-            else if (c == '<')
-            {
-                return 17;
-            }
-            else if (c == '>')
-            {
-                return 18;
-            }
-            else if (c == '"')
-            {
-                return 19;
-            }
-            else if (c == '\'')
-            {
-                return 20;
-            }
-            else if (c == '#')
-            {
-                return 21;
-            }
-            else if (c == '/')
-            {
-                return 22;
-            }
-            else if (c == '\n')
-            {
-                return 23;
-            }
-            else
-            {
-                return 25;
-            }
+                '\n' => 23,
+                'e' or 'E' => 4,
+                '.' => 3,
+                '+' => 5,
+                '-' => 6,
+                ';' => 7,
+                '{' => 8,
+                '}' => 9,
+                '?' => 10,
+                '=' => 11,
+                '*' => 12,
+                '%' => 13,
+                '&' => 14,
+                '|' => 15,
+                '!' => 16,
+                '<' => 17,
+                '>' => 18,
+                '"' => 19,
+                '\'' => 20,
+                '#' => 21,
+                '/' => 22,
+                _ when finArchivo() => 24,
+                _ when char.IsWhiteSpace(c) => 0,
+                _ when char.IsLetter(c) => 1,
+                _ when char.IsDigit(c) => 2,
+                _ => 25
+            };
         }
         private void Clasifica(int estado)
         {
@@ -232,9 +259,9 @@ namespace Sintaxis_1
                 case 2:
                 case 3:
                 case 4:
-                case 5:  //Creo que asi se hacia
+                case 5:
                 case 6:
-                case 7: Clasificacion =Tipos.Numero; break;
+                case 7: Clasificacion = Tipos.Numero; break;
                 case 8: Clasificacion = Tipos.FinSentencia; break;
                 case 9: Clasificacion = Tipos.InicioBloque; break;
                 case 10: Clasificacion = Tipos.FinBloque; break;

@@ -1,39 +1,14 @@
 /*
-REQUERIMIENTOS:
-    1) Indicar en el error Léxico o sintáctico, el número de línea y caracter [DONE]
-    2) En el log colocar el nombre del archivo a compilar, la fecha y la hora [DONE]
-    3)  Agregar el resto de asignaciones [DONE]
-            Asignacion -> 
-            Id = Expresion
-            Id++
-            Id--
-            Id IncrementoTermino Expresion
-            Id IncrementoFactor Expresion
-            Id = Console.Read()
-            Id = Console.ReadLine()
-    4) Emular el Console.Write() & Console.WriteLine() [DONE] 
-    5) Emular el Console.Read() & Console.ReadLine() [DONE]
-
-NUEVOS REQUERIMIENTOS:
-    1) Concatenación [DONE]
-    2) Inicializar una variable desde la declaración [DONE]
-    3) Evaluar las expresiones matemáticas [DONE]
-    4) Levantar una excepción si en el Console.(Read | ReadLine) no ingresan números [DONE]
-    5) Modificar la variable con el resto de operadores (Incremento de factor y termino) [DONE]
-    6) Implementar el else [DONE]
+    //SECTION REQUERIMIENTOS:
+    1) Implementar el get y set para los tokens -----
+    //ANCHOR Corroborar
+    //TODO: 2) Implementar parámetros por default en el constructor del archivo Léxico 
+    3) Implementar línea y columna en los errores semánticos
+    4) Implementar maximoTipo en la asignación (Cuando hagamos v.setValor(r) y poner una condición para )
+    5) Aplicar el casteo en el stack
+  //!SECTION  
 */
 
-
-/* 
-Requerimientos Nuevos 
-
-    1) Implementar get y set para la clase Token
-    2) Implementar parametros por default en el constructor lexico (archivo: Lexico)
-    3) Implementar linea y columna en los erroes semanticos 
-    4) Implementar maximoTipo en la asignacion, es decir, cuando se haga v.setValor(r)
-    5) Aplicar el casteo en el stack 
-
-*/
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -48,6 +23,7 @@ namespace Sintaxis_1
         Stack<float> s;
         List<Variable> l;
         Variable.TipoDato maximoTipo;
+
         public Lenguaje() : base()
         {
             s = new Stack<float>();
@@ -62,6 +38,7 @@ namespace Sintaxis_1
             log.WriteLine("Constructor lenguaje");
             maximoTipo = Variable.TipoDato.Char;
         }
+
 
         private void displayStack()
         {
@@ -143,7 +120,7 @@ namespace Sintaxis_1
                 throw new Error($"La variable {Contenido} ya existe", log, linea, columna);
             }
 
-            Variable v = new Variable(t, Contenido); //Arreglar en token para no tener get solo contenido
+            Variable v = new Variable(t, Contenido);
             l.Add(v);
 
             match(Tipos.Identificador);
@@ -164,9 +141,11 @@ namespace Sintaxis_1
                     {
                         match("ReadLine");
                         string? r = Console.ReadLine();
-                        if (float.TryParse(r, out float valor))
+                        float result;
+
+                        if (float.TryParse(r, out result))
                         {
-                            v.setValor(valor);
+                            v.setValor(result);
                         }
                         else
                         {
@@ -220,34 +199,34 @@ namespace Sintaxis_1
         //Instruccion -> console | If | While | do | For | Variables | Asignación
         private void Instruccion(bool ejecuta)
         {
-            if (Contenido == "Console")
+            switch (Contenido)
             {
-                console(ejecuta);
-            }
-            else if (Contenido == "if")
-            {
-                If(ejecuta);
-            }
-            else if (Contenido == "while")
-            {
-                While();
-            }
-            else if (Contenido == "do")
-            {
-                Do();
-            }
-            else if (Contenido == "for")
-            {
-                For();
-            }
-            else if (Clasificacion == Tipos.TipoDato)
-            {
-                Variables();
-            }
-            else
-            {
-                Asignacion();
-                match(";");
+                case "Console":
+                    console(ejecuta);
+                    break;
+                case "if":
+                    If(ejecuta);
+                    break;
+                case "while":
+                    While();
+                    break;
+                case "do":
+                    Do();
+                    break;
+                case "for":
+                    For();
+                    break;
+                default:
+                    if (Clasificacion == Tipos.TipoDato)
+                    {
+                        Variables();
+                    }
+                    else
+                    {
+                        Asignacion();
+                        match(";");
+                    }
+                    break;
             }
         }
         //Asignacion -> Identificador = Expresion; (DONE)
@@ -259,81 +238,81 @@ namespace Sintaxis_1
         Id = Console.Read() (DONE)
         Id = Console.ReadLine() (DONE)
         */
-        private void Asignacion(Variable? v = null) //Hice un cambio F: Se agrego parametros 
+
+        //SECTION - Asignacion
+        private void Asignacion()
         {
-            //Cada que se ejecute una asignacion reinicia maximo tipo
             maximoTipo = Variable.TipoDato.Char;
+
             float r;
-            //Variable? v = l.Find(variable => variable.getNombre() == Contenido);
+            Variable? v = l.Find(variable => variable.getNombre() == Contenido);
             if (v == null)
             {
-                throw new Error("Sintaxis: La variable " + Contenido + " no está definida", log, linea, columna);
+                throw new Error($"Sintaxis: La variable {Contenido} no está definida", log, linea, columna);
             }
             //Console.Write(Contenido + " = ");
             match(Tipos.Identificador);
-            if (Contenido == "++")
+            switch (Contenido)
             {
-                match("++");
-                r = v.getValor() + 1;
-                v.setValor(r);
-            }
-            else if (Contenido == "--")
-            {
-                match("--");
-                r = v.getValor() - 1;
-                v.setValor(r);
-            }
-            else if (Contenido == "=")
-            {
-                match("=");
-                if (Contenido == "Console")
-                {
-                    ListaIdentificadores(v.GetTipoDato()); // Ya se hace este procedimiento arriba así que simplemente obtenemos a través del método lo que necesitamos
-                }
-                else
-                {
-                    Expresion();
-                    r = s.Pop();
+                case "++":
+                    match("++");
+                    r = v.getValor() + 1;
                     v.setValor(r);
-                }
-            }
-            else if (Contenido == "+=")
-            {
-                match("+=");
-                Expresion();
-                r = v.getValor() + s.Pop();
-                v.setValor(r);
-            }
-            else if (Contenido == "-=")
-            {
-                match("-=");
-                Expresion();
-                r = v.getValor() - s.Pop();
-                v.setValor(r);
-            }
-            else if (Contenido == "*=")
-            {
-                match("*=");
-                Expresion();
-                r = v.getValor() * s.Pop();
-                v.setValor(r);
-            }
-            else if (Contenido == "/=")
-            {
-                match("/=");
-                Expresion();
-                r = v.getValor() / s.Pop();
-                v.setValor(r);
-            }
-            else if (Contenido == "%=")
-            {
-                match("%=");
-                Expresion();
-                r = v.getValor() % s.Pop();
-                v.setValor(r);
+                    break;
+                case "--":
+                    match("--");
+                    r = v.getValor() - 1;
+                    v.setValor(r);
+                    break;
+                case "=":
+                    match("=");
+                    if (Contenido == "Console")
+                    {
+                        ListaIdentificadores(v.GetTipoDato()); // Ya se hace este procedimiento arriba así que simplemente obtenemos a través del método lo que necesitamos
+                    }
+                    else
+                    {
+                        Expresion();
+                        r = s.Pop();
+                        v.setValor(r);
+                    }
+                    break;
+                case "+=":
+                    match("+=");
+                    Expresion();
+                    r = v.getValor() + s.Pop();
+                    v.setValor(r);
+                    break;
+                case "-=":
+                    match("-=");
+                    Expresion();
+                    r = v.getValor() - s.Pop();
+                    v.setValor(r);
+                    break;
+                case "*=":
+                    match("*=");
+                    Expresion();
+                    r = v.getValor() * s.Pop();
+                    v.setValor(r);
+                    break;
+                case "/=":
+                    match("/=");
+                    Expresion();
+                    r = v.getValor() / s.Pop();
+                    v.setValor(r);
+                    break;
+                case "%=":
+                    match("%=");
+                    Expresion();
+                    r = v.getValor() % s.Pop();
+                    v.setValor(r);
+                    break;
             }
             //displayStack();
         }
+
+        //!SECTION
+
         /*If -> if (Condicion) bloqueInstrucciones | instruccion
         (else bloqueInstrucciones | instruccion)?*/
         private void If(bool ejecuta2)
@@ -369,11 +348,14 @@ namespace Sintaxis_1
         private bool Condicion()
         {
             maximoTipo = Variable.TipoDato.Char;
+
             Expresion();
             float valor1 = s.Pop();
             string operador = Contenido;
             match(Tipos.OperadorRelacional);
+
             maximoTipo = Variable.TipoDato.Char;
+
             Expresion();
             float valor2 = s.Pop();
             switch (operador)
@@ -578,38 +560,54 @@ namespace Sintaxis_1
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
+            // Caso 1: Si es un número
             if (Clasificacion == Tipos.Numero)
             {
-                Variable.valorToTipoDato(float.Parse(Contenido));
+                // Verifica el tipo de dato máximo necesario para el número
+                if (maximoTipo < Variable.valorTipoDato(float.Parse(Contenido)))
+                {
+                    maximoTipo = Variable.valorTipoDato(float.Parse(Contenido));
+                }
+
+                // Agrega el número al stack
                 s.Push(float.Parse(Contenido));
-                //Console.Write(Contenido + " ");
                 match(Tipos.Numero);
             }
+            // Caso 2: Si es un identificador (variable)
             else if (Clasificacion == Tipos.Identificador)
             {
+                // Busca la variable en la lista de variables
                 Variable? v = l.Find(variable => variable.getNombre() == Contenido);
                 if (v == null)
                 {
                     throw new Error("Sintaxis: la variable " + Contenido + " no está definida", log, linea, columna);
                 }
 
+                // Actualiza el tipo máximo si es necesario
+                if (maximoTipo < v.GetTipoDato())
+                {
+                    maximoTipo = v.GetTipoDato();
+                }
 
-
+                // Agrega el valor de la variable al stack
                 s.Push(v.getValor());
-                //Console.Write(Contenido + " ");
                 match(Tipos.Identificador);
             }
+            // Caso 3: Si es una expresión entre paréntesis
             else
             {
                 match("(");
+                // Verifica si hay un casteo de tipo
                 Variable.TipoDato tipoCasteo = Variable.TipoDato.Char;
                 bool huboCasteo = false;
-                if(Clasificacion == Tipos.TipoDato){
-                    switch(Contenido){
-                        case "int": tipoCasteo = Variable.TipoDato.Int; 
-                        break;
-                        case "float": tipoCasteo = Variable.TipoDato.Float;
-                        break;
+
+                if (Clasificacion == Tipos.TipoDato)
+                {
+                    // Determina el tipo de casteo
+                    switch (Contenido)
+                    {
+                        case "int": tipoCasteo = Variable.TipoDato.Int; break;
+                        case "float": tipoCasteo = Variable.TipoDato.Float; break;
                     }
 
                     match(Tipos.TipoDato);
@@ -617,16 +615,22 @@ namespace Sintaxis_1
                     match("(");
                     huboCasteo = true;
                 }
+
+                // Evalúa la expresión dentro de los paréntesis
                 Expresion();
 
-                if(huboCasteo){
+                // Si hubo casteo, actualiza el tipo máximo
+                if (huboCasteo)
+                {
                     maximoTipo = tipoCasteo;
-                    /*
-                        Pop 
-                        Residuo de la division dependiendo del maximoTipo
-                        Push del residuo
-                    */
+                    /* 
+                    pop 
+                    residuo de la division dependiendo del tipo
+                    push
+                     */
                 }
+
+
                 match(")");
             }
         }

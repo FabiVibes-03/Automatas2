@@ -11,7 +11,7 @@ namespace Sintaxis_1
         {
             try
             {
-                using (Lenguaje lexico = new("main.cpp"))
+                using (Lenguaje lexico = new("prueba.cpp"))
                 {
                     lexico.Programa();
                 }

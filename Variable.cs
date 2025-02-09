@@ -20,45 +20,19 @@ namespace Sintaxis_1
             this.nombre = nombre;
             this.valor = valor;
         }
-        public void setValor(float valor){
-
-            //Aqui checar como saber si tiene . punto decimal
-            if(float.IsInteger(valor) && tipo!= TipoDato.Float){
-                this.valor = valor;
-
-                if(tipo == TipoDato.Char && valor < 255)
-                {
-                this.valor = valor;
-                }
-                else if(tipo == TipoDato.Int && valor <= Math.Pow(2,16)){
-                    this.valor = valor;
-                }
-                else{
-                    throw new Error("Semántico: no se puede asignar un " + valorToTipoDato(valor) + " a un " + tipo);
-                }
-            }
-            else if(tipo == TipoDato.Float){ 
+        public void setValor(float valor)
+        {
+            if (valorTipoDato(valor) <= tipo)
+            {
                 this.valor = valor;
             }
-            else{
-                    throw new Error("Semántico: no se puede asignar un " + valorToTipoDato(valor) + " a un " + tipo);
-                }
+            else
+            {
+                throw new Error("Semántico: no se puede asignar un " + valorTipoDato(valor) + " a un " + tipo);
+            }
         }
 
-        public static TipoDato valorToTipoDato(float valor){
-            if(!float.IsInteger(valor)){
-                return TipoDato.Float;
-            }
-            if(valor <= 255){
-                return TipoDato.Char;
-            }
-            else if(valor <= Math.Pow(2,16)){
-                return TipoDato.Int;
-            }
-            else{
-                return TipoDato.Float;
-            }
-        }
+
         public float getValor()
         {
             return valor;
@@ -67,8 +41,29 @@ namespace Sintaxis_1
         {
             return nombre;
         }
-        public TipoDato GetTipoDato(){
+        public TipoDato GetTipoDato()
+        {
             return tipo;
         }
+        public static TipoDato valorTipoDato(float valor)
+        {
+            if (!float.IsInteger(valor))
+            {
+                return TipoDato.Float;
+            }
+            else if (valor <= 255)
+            {
+                return TipoDato.Char;
+            }
+            else if (valor <= 65535)
+            {
+                return TipoDato.Int;
+            }
+            else
+            {
+                return TipoDato.Float;
+            }
+        }
     }
+
 }
