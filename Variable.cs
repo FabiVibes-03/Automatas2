@@ -20,7 +20,9 @@ namespace Sintaxis_1
             this.nombre = nombre;
             this.valor = valor;
         }
-        public void setValor(float valor)
+
+        //SECTION - Se modifico los parametros de SetValor para dar linea de error
+        public void setValor(float valor, int linea, int columna, StreamWriter log)
         {
             if (valorTipoDato(valor) <= tipo)
             {
@@ -28,10 +30,10 @@ namespace Sintaxis_1
             }
             else
             {
-                throw new Error("Semántico: no se puede asignar un " + valorTipoDato(valor) + " a un " + tipo);
+                throw new Error("Semántico: no se puede asignar un " + valorTipoDato(valor) + " a un " + tipo, log, linea, columna);
             }
         }
-
+        //!SECTION
 
         public float getValor()
         {

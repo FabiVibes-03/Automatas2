@@ -3,7 +3,7 @@
     1) Implementar el get y set para los tokens -----
     //ANCHOR Corroborar
     //TODO: 2) Implementar parámetros por default en el constructor del archivo Léxico 
-    3) Implementar línea y columna en los errores semánticos
+    //REVIEW - 3) Implementar línea y columna en los errores semánticos ----- 
     4) Implementar maximoTipo en la asignación (Cuando hagamos v.setValor(r) y poner una condición para )
     5) Aplicar el casteo en el stack
   //!SECTION  
@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.Contracts;
+using System.Drawing;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -135,7 +136,7 @@ namespace Sintaxis_1
                     {
                         match("Read");
                         int r = Console.Read();
-                        v.setValor(r); // Asignamos el último valor leído a la última variable detectada
+                        v.setValor(r, linea, columna, log); // Asignamos el último valor leído a la última variable detectada
                     }
                     else
                     {
@@ -145,7 +146,7 @@ namespace Sintaxis_1
 
                         if (float.TryParse(r, out result))
                         {
-                            v.setValor(result);
+                            v.setValor(result, linea, columna, log); 
                         }
                         else
                         {
@@ -160,7 +161,7 @@ namespace Sintaxis_1
                     // Como no se ingresó un número desde el Console, entonces viene de una expresión matemática
                     Expresion();
                     float resultado = s.Pop();
-                    l.Last().setValor(resultado);
+                    l.Last().setValor(resultado, linea, columna, log);
                 }
             }
             if (Contenido == ",")
@@ -257,12 +258,12 @@ namespace Sintaxis_1
                 case "++":
                     match("++");
                     r = v.getValor() + 1;
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "--":
                     match("--");
                     r = v.getValor() - 1;
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "=":
                     match("=");
@@ -274,38 +275,38 @@ namespace Sintaxis_1
                     {
                         Expresion();
                         r = s.Pop();
-                        v.setValor(r);
+                        v.setValor(r, linea, columna, log);
                     }
                     break;
                 case "+=":
                     match("+=");
                     Expresion();
                     r = v.getValor() + s.Pop();
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "-=":
                     match("-=");
                     Expresion();
                     r = v.getValor() - s.Pop();
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "*=":
                     match("*=");
                     Expresion();
                     r = v.getValor() * s.Pop();
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "/=":
                     match("/=");
                     Expresion();
                     r = v.getValor() / s.Pop();
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
                 case "%=":
                     match("%=");
                     Expresion();
                     r = v.getValor() % s.Pop();
-                    v.setValor(r);
+                    v.setValor(r, linea, columna, log);
                     break;
             }
             //displayStack();

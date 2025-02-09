@@ -5,7 +5,15 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
-  int a = 1000;
+  float a = 1;
+  float b = 2000;
+
+
+  
+  char c = a+b;
+
+  Console.WriteLine("" + a + " es igual a " + b + " " + c +);
+
   /*
   int aux = 0;
   int b = Console.ReadLine();
