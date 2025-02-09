@@ -620,18 +620,35 @@ namespace Sintaxis_1
                 // Evalúa la expresión dentro de los paréntesis
                 Expresion();
 
-                // Si hubo casteo, actualiza el tipo máximo
+                //REVIEW - Si hubo casteo, actualiza el tipo máximo
                 if (huboCasteo)
                 {
-                    maximoTipo = tipoCasteo;
-                    /* 
-                    pop 
-                    residuo de la division dependiendo del tipo
-                    push
-                     */
+                    float valor = s.Pop();
+
+                    switch (tipoCasteo)
+                    {
+                        case Variable.TipoDato.Int:
+                            valor = (int)valor;
+                            break;
+
+                        case Variable.TipoDato.Char:
+                            valor = (float)((int)valor % 256);
+                            break;
+
+                        default:
+                            if (tipoCasteo != Variable.TipoDato.Float)
+                            {
+                                throw new Error("Sintaxis: tipo de dato no soportado para casteo", log, linea, columna);
+                            }
+                            break;
+                    }
+                    if (maximoTipo < tipoCasteo)
+                    {
+                        maximoTipo = tipoCasteo;
+                    }
+
+                    s.Push(valor);
                 }
-
-
                 match(")");
             }
         }
