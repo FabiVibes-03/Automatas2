@@ -136,7 +136,7 @@ namespace Sintaxis_1
                     {
                         match("Read");
                         int r = Console.Read();
-                        v.setValor(r, linea, columna, log); // Asignamos el último valor leído a la última variable detectada
+                        v.setValor(r, linea, columna, log, maximoTipo); // Asignamos el último valor leído a la última variable detectada
                     }
                     else
                     {
@@ -146,7 +146,7 @@ namespace Sintaxis_1
 
                         if (float.TryParse(r, out result))
                         {
-                            v.setValor(result, linea, columna, log); 
+                            v.setValor(result, linea, columna, log, maximoTipo); 
                         }
                         else
                         {
@@ -161,7 +161,7 @@ namespace Sintaxis_1
                     // Como no se ingresó un número desde el Console, entonces viene de una expresión matemática
                     Expresion();
                     float resultado = s.Pop();
-                    l.Last().setValor(resultado, linea, columna, log);
+                    l.Last().setValor(resultado, linea, columna, log, maximoTipo);
                 }
             }
             if (Contenido == ",")
@@ -258,12 +258,12 @@ namespace Sintaxis_1
                 case "++":
                     match("++");
                     r = v.getValor() + 1;
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "--":
                     match("--");
                     r = v.getValor() - 1;
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "=":
                     match("=");
@@ -275,38 +275,38 @@ namespace Sintaxis_1
                     {
                         Expresion();
                         r = s.Pop();
-                        v.setValor(r, linea, columna, log);
+                        v.setValor(r, linea, columna, log, maximoTipo);
                     }
                     break;
                 case "+=":
                     match("+=");
                     Expresion();
                     r = v.getValor() + s.Pop();
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "-=":
                     match("-=");
                     Expresion();
                     r = v.getValor() - s.Pop();
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "*=":
                     match("*=");
                     Expresion();
                     r = v.getValor() * s.Pop();
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "/=":
                     match("/=");
                     Expresion();
                     r = v.getValor() / s.Pop();
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
                 case "%=":
                     match("%=");
                     Expresion();
                     r = v.getValor() % s.Pop();
-                    v.setValor(r, linea, columna, log);
+                    v.setValor(r, linea, columna, log, maximoTipo);
                     break;
             }
             //displayStack();
@@ -526,11 +526,22 @@ namespace Sintaxis_1
                 //Console.Write(operador + " ");
                 float n1 = s.Pop();
                 float n2 = s.Pop();
+                //REVIEW - Cree un float donde se aguarda el resultado y pushearlo al final
+                float resultado = 0; 
                 switch (operador)
                 {
-                    case "+": s.Push(n2 + n1); break;
-                    case "-": s.Push(n2 - n1); break;
+                    case "+": resultado = n2 + n1; break;
+                    case "-": resultado = n2 - n1; break;
                 }
+
+                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
+                if (tipoResultado < maximoTipo)
+                {
+                    maximoTipo = tipoResultado;
+                }
+                
+                //Hacemos el push al final ya con el resultado
+                s.Push(resultado);
             }
         }
         //Termino -> Factor PorFactor
@@ -550,12 +561,22 @@ namespace Sintaxis_1
                 //Console.Write(operador + " ");
                 float n1 = s.Pop();
                 float n2 = s.Pop();
+                
+                //REVIEW - Cree un float donde se aguarda el resultado y pushearlo al final
+                float resultado = 0;
                 switch (operador)
                 {
-                    case "*": s.Push(n2 * n1); break;
-                    case "/": s.Push(n2 / n1); break;
-                    case "%": s.Push(n2 % n1); break;
+                    case "*": resultado = n2 * n1; break;
+                    case "/": resultado = n2 / n1; break;
+                    case "%": resultado = n2 % n1; break;
                 }
+                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
+                if (tipoResultado < maximoTipo)
+                {
+                    maximoTipo = tipoResultado;
+                }
+                
+                s.Push(resultado);
             }
         }
         //Factor -> numero | identificador | (Expresion)
@@ -642,11 +663,8 @@ namespace Sintaxis_1
                             }
                             break;
                     }
-                    if (maximoTipo < tipoCasteo)
-                    {
-                        maximoTipo = tipoCasteo;
-                    }
-
+                    //Obligamos el casteo
+                    maximoTipo = tipoCasteo;
                     s.Push(valor);
                 }
                 match(")");

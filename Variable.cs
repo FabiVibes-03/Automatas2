@@ -22,15 +22,15 @@ namespace Sintaxis_1
         }
 
         //SECTION - Se modifico los parametros de SetValor para dar linea de error
-        public void setValor(float valor, int linea, int columna, StreamWriter log)
+        public void setValor(float valor, int linea, int columna, StreamWriter log, TipoDato MaxTipo)
         {
-            if (valorTipoDato(valor) <= tipo)
+            if (MaxTipo <= tipo)
             {
                 this.valor = valor;
             }
             else
             {
-                throw new Error("Semántico: no se puede asignar un " + valorTipoDato(valor) + " a un " + tipo, log, linea, columna);
+                throw new Error("Semántico: no se puede asignar un " + MaxTipo + " a un " + tipo, log, linea, columna);
             }
         }
         //!SECTION
@@ -49,7 +49,8 @@ namespace Sintaxis_1
         }
         public static TipoDato valorTipoDato(float valor)
         {
-            if (!float.IsInteger(valor))
+            //REVIEW - IsInteger daba error, asi que lo cambie
+            if (valor % 1 != 0)
             {
                 return TipoDato.Float;
             }
