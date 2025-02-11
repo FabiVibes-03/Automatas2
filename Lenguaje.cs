@@ -653,7 +653,7 @@ namespace Sintaxis_1
                             break;
 
                         case Variable.TipoDato.Char:
-                            valor = (float)((int)valor % 256);
+                            valor = valor % 256;
                             break;
 
                         default:

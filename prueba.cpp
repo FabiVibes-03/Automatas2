@@ -5,13 +5,7 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
-  /*
-  Archivo: prueba.cpp
-  Descripción: Archivo de prueba para verificar:
-     - El manejo de línea y columna en los errores semánticos (Req. 3).
-     - La validación de maximoTipo en las asignaciones (Req. 4).
-     - El correcto funcionamiento del casteo en las expresiones (Req. 5).
-*/
+
 
 // -------------------------------
 // Caso 1: Asignación errónea a un entero
