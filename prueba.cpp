@@ -5,6 +5,11 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
+/**/
+char a;
+
+a = 12; //Ya da el error al asignar un Int a un Char
+int b = 2;
 
 
 // -------------------------------
@@ -28,7 +33,7 @@ float c = 1 + 2.5;  // Correcto
 // -------------------------------
 // Caso 4: Asignación correcta a una variable char con valor dentro del rango
 // La expresión 65 + 10 da 75, que es menor o igual a 255, por lo que se considera de tipo Char.
-char d = 65 + 10;  // Correcto
+char d = (char)(65 + 10);  // error a menos que use casteo
 
 // -------------------------------
 // Caso 5: Asignación errónea a una variable char

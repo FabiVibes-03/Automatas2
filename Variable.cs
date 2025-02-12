@@ -47,26 +47,30 @@ namespace Sintaxis_1
         {
             return tipo;
         }
-        public static TipoDato valorTipoDato(float valor)
+        public static TipoDato valorTipoDato(float valor, bool Casteo = false)
         {
-            //REVIEW - IsInteger daba error, asi que lo cambie
-            if (valor % 1 != 0)
+            //REVIEW - Cambie la logica de esta comparativa para agregar el caso de casteo
+            if (valor % 1 != 0)  
             {
                 return TipoDato.Float;
             }
-            else if (valor <= 255)
+            else if(Casteo)
             {
-                return TipoDato.Char;
-            }
-            else if (valor <= 65535)
-            {
+                if (valor >= 0 && valor <= 255)
+                {
+                    return TipoDato.Char;
+                }
                 return TipoDato.Int;
             }
             else
             {
-                return TipoDato.Float;
+                if (valor >= 0 && valor <= 9)
+                {
+                    return TipoDato.Char;
+                }
+                return TipoDato.Int;
             }
-        }
+       }
     }
 
 }

@@ -24,6 +24,9 @@ namespace Sintaxis_1
         Stack<float> s;
         List<Variable> l;
         Variable.TipoDato maximoTipo;
+        //NOTE - Se crea como variable global
+        bool huboCasteo = false; 
+        Variable.TipoDato tipoCasteo = Variable.TipoDato.Char;
 
         public Lenguaje() : base()
         {
@@ -535,7 +538,12 @@ namespace Sintaxis_1
                 }
 
                 Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
-                if (tipoResultado < maximoTipo)
+                //NOTE - Esto evalua si existe oh no
+                if (huboCasteo) 
+                {
+                    maximoTipo = tipoCasteo; 
+                }
+                else if (maximoTipo < tipoResultado) 
                 {
                     maximoTipo = tipoResultado;
                 }
@@ -571,11 +579,16 @@ namespace Sintaxis_1
                     case "%": resultado = n2 % n1; break;
                 }
                 Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
-                if (tipoResultado < maximoTipo)
+                //NOTE - Se hace lo mismo que antes
+                if (huboCasteo) 
+                {
+                    maximoTipo = tipoCasteo; 
+                }
+                else if (maximoTipo < tipoResultado) 
                 {
                     maximoTipo = tipoResultado;
                 }
-                
+                        
                 s.Push(resultado);
             }
         }
@@ -585,14 +598,17 @@ namespace Sintaxis_1
             // Caso 1: Si es un número
             if (Clasificacion == Tipos.Numero)
             {
+                //Contenido lo pasamos a valor
+                float valor = float.Parse(Contenido);
+                Variable.TipoDato tipoValor = Variable.valorTipoDato(valor, huboCasteo);
                 // Verifica el tipo de dato máximo necesario para el número
-                if (maximoTipo < Variable.valorTipoDato(float.Parse(Contenido)))
+                if (maximoTipo < tipoValor)
                 {
-                    maximoTipo = Variable.valorTipoDato(float.Parse(Contenido));
+                    maximoTipo = tipoValor;
                 }
 
                 // Agrega el número al stack
-                s.Push(float.Parse(Contenido));
+                s.Push(valor);
                 match(Tipos.Numero);
             }
             // Caso 2: Si es un identificador (variable)
@@ -619,10 +635,8 @@ namespace Sintaxis_1
             else
             {
                 match("(");
-                // Verifica si hay un casteo de tipo
-                Variable.TipoDato tipoCasteo = Variable.TipoDato.Char;
-                bool huboCasteo = false;
-
+                //Casteo explicito
+                huboCasteo = false;
                 if (Clasificacion == Tipos.TipoDato)
                 {
                     // Determina el tipo de casteo
@@ -630,6 +644,7 @@ namespace Sintaxis_1
                     {
                         case "int": tipoCasteo = Variable.TipoDato.Int; break;
                         case "float": tipoCasteo = Variable.TipoDato.Float; break;
+                        case "char": tipoCasteo = Variable.TipoDato.Char; break;
                     }
 
                     match(Tipos.TipoDato);
@@ -652,8 +667,9 @@ namespace Sintaxis_1
                             valor = (int)valor;
                             break;
 
+                        //NOTE - Eliminamos numeros decimales y pasamos a float por la naturaleza de la variable a la que se asigna
                         case Variable.TipoDato.Char:
-                            valor = valor % 256;
+                            valor = (float)((int)valor % 256);
                             break;
 
                         default:
@@ -674,3 +690,18 @@ namespace Sintaxis_1
         ST  = Tokens (Contenido | Classification) = Invocar match    Variables -> tipo_dato Lista_identificadores; Variables?*/
     }
 }
+
+//SECTION - Cambios de esta version
+/*
+    En lenguaje se aplico un cambio en las variables globales, creamos bool huboCasteo
+    Esto se aplica para cuando el casteo es explicito y se cambio el porFactor y masTermino
+
+    En Factor se detecta si existe casteo
+
+    En factor se crea una variable llamada "valor" donde se guarda el -contenido- de una expresion
+
+    En la clase variable se modifico la estructura del TipoValor
+
+    general: Se arreglo el problema del casteo con char 
+*/
+//!SECTION
