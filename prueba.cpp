@@ -5,46 +5,91 @@ using System.Threading.Tasks;
 
 static void Main(string[] args)
 {
-/**/
-char a;
+  //PRUEBAS CON CHAR
+  char a;
 
-a = 12; //Ya da el error al asignar un Int a un Char
-int b = 2;
+  //char + int = int -> Error
+  a = 'a';
+  int b = 2;
+  a = a + b; //Error
+  a = (char) (a + b); //Bien
+
+  //char + float = float -> Error
+  a = 1;
+  float c = 3;
+  a = a + c; //Error
+  a = (int) (a + c); //Error
+  a = (char) (a + c); //Bien
+
+  //char + char = char -> Bien
+  a = 1;
+  char d = 4;
+  a = a + d;
+
+  //PRUEBAS CON INT
+  int e = 256;
+
+  //int + char = int -> Bien
+  char f = 2;
+  e = e + f; //Bien
+
+  //int + float = float -> Error
+  e = 256;
+  float g = 5;
+  e = e + g; // Error
+  e = (int) (e + g) // Bien
+
+  //int + int = int -> Bien
+  e = 256;
+  int h = 2;
+  e = e + h; //Bien
+  e = (char) (e + h) // Bien
 
 
-// -------------------------------
-// Caso 1: Asignación errónea a un entero
-// Se declara un entero 'a' e intenta asignarle el resultado de 1 + 2.5.
-// La expresión 1 + 2.5 tiene maximoTipo = Float, y dado que Float no es compatible con Int,
-// se lanzará un error semántico indicando la línea y la columna.
-//int a = 1 + 2.5;  // Error esperado: "Semántico: no se puede asignar un Float a un Int"
+  /*if(c != 5) {
+    Console.WriteLine("La suma es distinta de 5");
 
-// -------------------------------
-// Caso 2: Uso correcto de casteo para asignación a entero
-// Se utiliza el casteo a int para convertir el resultado de la expresión a un tipo compatible.
-int b = (int)(1 + 2.5);  // Correcto: se fuerza la conversión a Int
+    if(a == 7) {
+      Console.WriteLine("La variable a es igual a 7");
+    } else {
+      Console.WriteLine("Else ejecutado");
+    }
+  } else {
+    Console.WriteLine("La suma de a + b = " + c);
+  }*/
 
-// -------------------------------
-// Caso 3: Asignación correcta a una variable float
-// La variable 'c' es de tipo float, por lo que la expresión 1 + 2.5 (maximoTipo = Float)
-// es compatible y se asigna sin problemas.
-float c = 1 + 2.5;  // Correcto
+  /*int b = Console.ReadLine();
+  int a = (3 + 5) * 8 - (10 - 2*b) / b; // 61
+  a--;
+  a+=40;
+  a*=2;
+  a--;
+  a-=99;
 
-// -------------------------------
-// Caso 4: Asignación correcta a una variable char con valor dentro del rango
-// La expresión 65 + 10 da 75, que es menor o igual a 255, por lo que se considera de tipo Char.
-char d = (char)(65 + 10);  // error a menos que use casteo
+  int n = 5;
 
-// -------------------------------
-// Caso 5: Asignación errónea a una variable char
-// Se intenta asignar a 'e' el valor 300. Dado que 300 es mayor que 255, se clasifica como Int,
-// lo que provoca error al asignarlo a un char (maximoTipo Int > Char).
-//char e = 300;  // Error esperado: "Semántico: no se puede asignar un Int a un Char"
+  for(b = 100; a < n; a++) {
+    b++;
+    while( b != 5 ) {
+      if(n == 5) {
+        Console.WriteLine("5 es igual a " + n + " " + a + " " + b );
+      } else {
+        Console.WriteLine("5 es diferente a " + n);
+      }
+    }
+  }
 
-// -------------------------------
-// Caso 6: Uso de Console para mostrar un mensaje
-// Si las asignaciones anteriores no interrumpen la ejecución (o se prueban individualmente),
-// se imprime un mensaje de confirmación.
-Console.WriteLine("Pruebas completadas correctamente.");
-
+  if(a % 2 != 0) {
+    Console.WriteLine("Es impar " + a);
+    if(b == 2) {
+      Console.WriteLine("b es igual a 2");
+    } else if( b > 3) {
+      Console.WriteLine("b es mayor a 3 y vale " + b);
+    }
+    else {
+      Console.WriteLine("b no es igual a 2 y vale " + b);
+    }
+  } else {
+    Console.WriteLine("Es impar");
+  }*/
 }

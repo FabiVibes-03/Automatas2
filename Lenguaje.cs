@@ -100,6 +100,7 @@ namespace Sintaxis_1
             {
                 case "int": t = Variable.TipoDato.Int; break;
                 case "float": t = Variable.TipoDato.Float; break;
+                    /* case "char": t = Variable.TipoDato.Char; break; */
             }
             match(Tipos.TipoDato);
             ListaIdentificadores(t);
@@ -597,6 +598,7 @@ namespace Sintaxis_1
         }
 
         //SECTION - FACTOR
+        //FIXME - No hay una validación en caso de que el valor sea de tipo Caracter
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
@@ -637,6 +639,18 @@ namespace Sintaxis_1
                 match(Tipos.Identificador);
             }
             // Caso 3: Si es una expresión entre paréntesis
+            //ANCHOR - Agregar aquí una validación en caso de ser identificador
+            else if (Clasificacion == Tipos.Caracter)
+            {
+                float valor = (float)Contenido[1];
+                Variable.TipoDato tipoValor = Variable.TipoDato.Char;
+                if (maximoTipo < tipoValor)
+                {
+                    maximoTipo = tipoValor;
+                }
+                s.Push(valor);
+                match(Tipos.Caracter);
+            }
             else
             {
                 match("(");
