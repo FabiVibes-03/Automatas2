@@ -433,43 +433,105 @@ namespace Sintaxis_1
             }
         }
         //Console -> Console.(WriteLine|Write) (cadena? concatenaciones?);
-        private void console(bool ejecuta)
+        private void console(bool excecute)
         {
-            bool isWriteLine = false;
+            bool console = false;
+            bool isRead = false;
+            string content = "";
+
             match("Console");
             match(".");
-            if (Contenido == "WriteLine")
+
+            switch (Contenido)
             {
-                match("WriteLine");
-                isWriteLine = true;
+                case "Write":
+                    console = true;
+                    match("Write");
+                    break;
+                case "Read":
+                    isRead = true;
+                    match("Read");
+                    break;
+                case "ReadLine":
+                    isRead = true;
+                    match("ReadLine");
+                    break;
+                default:
+                    match("WriteLine");
+                    break;
             }
-            else
-            {
-                match("Write");
-            }
+
             match("(");
-            string concatenaciones = "";
-            if (Clasificacion == Tipos.Cadena)
+
+            if (!isRead && Contenido != ")")
             {
-                concatenaciones = Contenido.Trim('"');
-                match(Tipos.Cadena);
-            }
-            if (Contenido == "+")
-            {
-                match("+");
-                concatenaciones += Concatenaciones();  // Se acumula el resultado de las concatenaciones
-            }
-            match(")");
-            match(";");
-            if (ejecuta)
-            {
-                if (isWriteLine)
+
+                if (Clasificacion == Tipos.Cadena)
                 {
-                    Console.WriteLine(concatenaciones);
+                    if (excecute)
+                    {
+                        Console.Write(Contenido.ToString().Replace('"', ' '));
+                    }
+                    match(Tipos.Cadena);
                 }
                 else
                 {
-                    Console.Write(concatenaciones);
+                    string nomV = Contenido;
+                    match(Tipos.Identificador);
+                    Variable v = l.Find(variable => variable.getNombre() == nomV);
+
+                    if (v == null)
+                    {
+                        throw new Error("La variable no existe", log, linea, columna);
+                    }
+                    if (excecute)
+                    {
+                        //? Por alguna razón sigue imprimiendo en float REVISAR
+                        Console.Write(((int)v.getValor()).ToString());
+                    }
+                    //match(v.getValor().ToString());
+                }
+            }
+
+            if (Contenido == "+")
+            {
+                match("+");
+                Concatenaciones();
+            }
+
+            match(")");
+            match(";");
+
+            string txt;
+            int num;
+
+
+            if (isRead)
+            {
+                switch (Contenido)
+                {
+                    case "ReadLine":
+                        content = Console.ReadLine();
+                        break;
+                    case "Read":
+                        content = Console.Read().ToString();
+                        break;
+                }
+
+                if (!int.TryParse(content, out num))
+                {
+                    throw new Error("Error: La entrada no es un número válido.", log, linea, columna);
+                }
+            }
+
+
+
+            if (!isRead && excecute)
+            {
+                switch (console)
+                {
+                    case true: Console.Write(content); break;
+                    case false: Console.WriteLine(content); break;
                 }
             }
         }
@@ -525,6 +587,7 @@ namespace Sintaxis_1
         //MasTermino -> (OperadorTermino Termino)?
         private void MasTermino()
         {
+            maximoTipo = Variable.TipoDato.Char;
             if (Clasificacion == Tipos.OperadorTermino)
             {
                 string operador = Contenido;

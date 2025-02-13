@@ -1,5 +1,5 @@
 Archivo: prueba.cpp
-Fecha y hora: 12/02/2025 02:21:31 p. m.
+Fecha y hora: 13/02/2025 05:17:13 p. m.
 ----------------------------------
 Constructor lenguaje
-Error: Semántico: no se puede asignar un Int a un Charen la linea [14] en la columna [13]
+Error: Sintaxis. Se espera un )en la linea [4] en la columna [22]
