@@ -1,13 +1,5 @@
 Archivo: prueba.cpp
-Fecha y hora: 13/02/2025 04:08:45 p. m.
+Fecha y hora: 12/02/2025 02:21:31 p. m.
 ----------------------------------
 Constructor lenguaje
-Lista de variables: 
-a Char 5
-b Int 2
-c Float 3
-d Char 4
-e Int 4
-f Char 2
-g Float 5
-h Int 2
+Error: Semántico: no se puede asignar un Int a un Charen la linea [14] en la columna [13]

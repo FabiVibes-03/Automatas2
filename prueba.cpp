@@ -9,17 +9,16 @@ static void Main(string[] args)
   char a;
 
   //char + int = int -> Error
-  a = 1;
+  a = 'a';
   int b = 2;
-  //a = a + b; //Error
+  a = a + b; //Error
   a = (char) (a + b); //Bien
-  Console.WriteLine(a);
 
   //char + float = float -> Error
   a = 1;
   float c = 3;
   a = a + c; //Error
-  //a = (int) (a + c); //Error
+  a = (int) (a + c); //Error
   a = (char) (a + c); //Bien
 
   //char + char = char -> Bien
@@ -38,13 +37,13 @@ static void Main(string[] args)
   e = 256;
   float g = 5;
   e = e + g; // Error
-  e = (int) (e + g); // Bien
+  e = (int) (e + g) // Bien
 
   //int + int = int -> Bien
   e = 256;
   int h = 2;
   e = e + h; //Bien
-  e = (char) (e + h); // Bien
+  e = (char) (e + h) // Bien
 
 
   /*if(c != 5) {

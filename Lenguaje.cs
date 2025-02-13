@@ -21,12 +21,15 @@ namespace Sintaxis_1
 {
     public class Lenguaje : Sintaxis
     {
+
+        //@params GLOBALES
         Stack<float> s;
         List<Variable> l;
         Variable.TipoDato maximoTipo;
         //NOTE - Se crea como variable global
         bool huboCasteo = false;
         Variable.TipoDato tipoCasteo = Variable.TipoDato.Char;
+        //!@params
 
         public Lenguaje() : base()
         {
@@ -97,6 +100,7 @@ namespace Sintaxis_1
             {
                 case "int": t = Variable.TipoDato.Int; break;
                 case "float": t = Variable.TipoDato.Float; break;
+                    /* case "char": t = Variable.TipoDato.Char; break; */
             }
             match(Tipos.TipoDato);
             ListaIdentificadores(t);
@@ -164,7 +168,7 @@ namespace Sintaxis_1
                     // Como no se ingresó un número desde el Console, entonces viene de una expresión matemática
                     Expresion();
                     float resultado = s.Pop();
-                    v.setValor(resultado, linea, columna, log, maximoTipo);
+                    l.Last().setValor(resultado, linea, columna, log, maximoTipo);
                 }
             }
             if (Contenido == ",")
@@ -429,105 +433,43 @@ namespace Sintaxis_1
             }
         }
         //Console -> Console.(WriteLine|Write) (cadena? concatenaciones?);
-        private void console(bool excecute)
+        private void console(bool ejecuta)
         {
-            bool console = false;
-            bool isRead = false;
-            string content = "";
-
+            bool isWriteLine = false;
             match("Console");
             match(".");
-
-            switch (Contenido)
+            if (Contenido == "WriteLine")
             {
-                case "Write":
-                    console = true;
-                    match("Write");
-                    break;
-                case "Read":
-                    isRead = true;
-                    match("Read");
-                    break;
-                case "ReadLine":
-                    isRead = true;
-                    match("ReadLine");
-                    break;
-                default:
-                    match("WriteLine");
-                    break;
+                match("WriteLine");
+                isWriteLine = true;
             }
-
+            else
+            {
+                match("Write");
+            }
             match("(");
-
-            if (!isRead && Contenido != ")")
+            string concatenaciones = "";
+            if (Clasificacion == Tipos.Cadena)
             {
-
-                if (Clasificacion == Tipos.Cadena)
-                {
-                    if (excecute)
-                    {
-                        Console.Write(Contenido.ToString().Replace('"', ' '));
-                    }
-                    match(Tipos.Cadena);
-                }
-                else
-                {
-                    string nomV = Contenido;
-                    match(Tipos.Identificador);
-                    Variable v = l.Find(variable => variable.getNombre() == nomV);
-
-                    if (v == null)
-                    {
-                        throw new Error("La variable no existe", log, linea, columna);
-                    }
-                    if (excecute)
-                    {
-                        //? Por alguna razón sigue imprimiendo en float REVISAR
-                        Console.Write(((int)v.getValor()).ToString());
-                    }
-                    //match(v.getValor().ToString());
-                }
+                concatenaciones = Contenido.Trim('"');
+                match(Tipos.Cadena);
             }
-
             if (Contenido == "+")
             {
                 match("+");
-                Concatenaciones();
+                concatenaciones += Concatenaciones();  // Se acumula el resultado de las concatenaciones
             }
-
             match(")");
             match(";");
-
-            string txt;
-            int num;
-
-
-            if (isRead)
+            if (ejecuta)
             {
-                switch (Contenido)
+                if (isWriteLine)
                 {
-                    case "ReadLine":
-                        content = Console.ReadLine();
-                        break;
-                    case "Read":
-                        content = Console.Read().ToString();
-                        break;
+                    Console.WriteLine(concatenaciones);
                 }
-
-                if (!int.TryParse(content, out num))
+                else
                 {
-                    throw new Error("Error: La entrada no es un número válido.", log, linea, columna);
-                }
-            }
-
-
-
-            if (!isRead && excecute)
-            {
-                switch (console)
-                {
-                    case true: Console.Write(content); break;
-                    case false: Console.WriteLine(content); break;
+                    Console.Write(concatenaciones);
                 }
             }
         }
@@ -621,8 +563,6 @@ namespace Sintaxis_1
             PorFactor();
         }
         //PorFactor -> (OperadorFactor Factor)?
-
-        //SECTION - PorFactor
         private void PorFactor()
         {
             if (Clasificacion == Tipos.OperadorFactor)
@@ -656,11 +596,12 @@ namespace Sintaxis_1
                 s.Push(resultado);
             }
         }
-        //!SECTION
+
+        //SECTION - FACTOR
+        //FIXME - No hay una validación en caso de que el valor sea de tipo Caracter
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
-            maximoTipo = Variable.TipoDato.Char;
             // Caso 1: Si es un número
             if (Clasificacion == Tipos.Numero)
             {
@@ -698,6 +639,18 @@ namespace Sintaxis_1
                 match(Tipos.Identificador);
             }
             // Caso 3: Si es una expresión entre paréntesis
+            //ANCHOR - Agregar aquí una validación en caso de ser identificador
+            else if (Clasificacion == Tipos.Caracter)
+            {
+                float valor = (float)Contenido[1];
+                Variable.TipoDato tipoValor = Variable.TipoDato.Char;
+                if (maximoTipo < tipoValor)
+                {
+                    maximoTipo = tipoValor;
+                }
+                s.Push(valor);
+                match(Tipos.Caracter);
+            }
             else
             {
                 match("(");
@@ -718,7 +671,7 @@ namespace Sintaxis_1
                     match("(");
                     huboCasteo = true;
                 }
-
+                //!SECTION
                 // Evalúa la expresión dentro de los paréntesis
                 Expresion();
 
@@ -730,12 +683,12 @@ namespace Sintaxis_1
                     switch (tipoCasteo)
                     {
                         case Variable.TipoDato.Int:
-                            valor = (int)valor % 65535;
+                            valor = (int)valor % MathF.Pow(2, 16);
                             break;
 
                         //NOTE - Eliminamos numeros decimales y pasamos a float por la naturaleza de la variable a la que se asigna
                         case Variable.TipoDato.Char:
-                            valor = (float)((int)valor % 256);
+                            valor = (float)((int)valor % Math.Pow(2, 8));
                             break;
 
                         default:

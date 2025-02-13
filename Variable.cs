@@ -50,11 +50,11 @@ namespace Sintaxis_1
         public static TipoDato valorTipoDato(float valor, bool Casteo = false)
         {
             //REVIEW - Cambie la logica de esta comparativa para agregar el caso de casteo
-            if (valor % 1 != 0)
+            if (valor % 1 != 0)  
             {
                 return TipoDato.Float;
             }
-            else if (Casteo)
+            else if(Casteo)
             {
                 if (valor >= 0 && valor <= 255)
                 {
@@ -70,7 +70,7 @@ namespace Sintaxis_1
                 }
                 return TipoDato.Int;
             }
-        }
+       }
     }
 
 }
