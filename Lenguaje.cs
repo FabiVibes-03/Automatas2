@@ -168,7 +168,7 @@ namespace Sintaxis_1
                     // Como no se ingresó un número desde el Console, entonces viene de una expresión matemática
                     Expresion();
                     float resultado = s.Pop();
-                    l.Last().setValor(resultado, linea, columna, log, maximoTipo);
+                    v.setValor(resultado, linea, columna, log, maximoTipo);
                 }
             }
             if (Contenido == ",")
