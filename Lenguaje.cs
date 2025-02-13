@@ -25,7 +25,7 @@ namespace Sintaxis_1
         List<Variable> l;
         Variable.TipoDato maximoTipo;
         //NOTE - Se crea como variable global
-        bool huboCasteo = false; 
+        bool huboCasteo = false;
         Variable.TipoDato tipoCasteo = Variable.TipoDato.Char;
 
         public Lenguaje() : base()
@@ -149,7 +149,9 @@ namespace Sintaxis_1
 
                         if (float.TryParse(r, out result))
                         {
-                            v.setValor(result, linea, columna, log, maximoTipo); 
+                            //ANCHOR - Lista
+                            Console.WriteLine("Entró");
+                            v.setValor(result, linea, columna, log, maximoTipo);
                         }
                         else
                         {
@@ -164,7 +166,7 @@ namespace Sintaxis_1
                     // Como no se ingresó un número desde el Console, entonces viene de una expresión matemática
                     Expresion();
                     float resultado = s.Pop();
-                    l.Last().setValor(resultado, linea, columna, log, maximoTipo);
+                    v.setValor(resultado, linea, columna, log, maximoTipo);
                 }
             }
             if (Contenido == ",")
@@ -530,7 +532,7 @@ namespace Sintaxis_1
                 float n1 = s.Pop();
                 float n2 = s.Pop();
                 //REVIEW - Cree un float donde se aguarda el resultado y pushearlo al final
-                float resultado = 0; 
+                float resultado = 0;
                 switch (operador)
                 {
                     case "+": resultado = n2 + n1; break;
@@ -539,15 +541,15 @@ namespace Sintaxis_1
 
                 Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
                 //NOTE - Esto evalua si existe oh no
-                if (huboCasteo) 
+                if (huboCasteo)
                 {
-                    maximoTipo = tipoCasteo; 
+                    maximoTipo = tipoCasteo;
                 }
-                else if (maximoTipo < tipoResultado) 
+                else if (maximoTipo < tipoResultado)
                 {
                     maximoTipo = tipoResultado;
                 }
-                
+
                 //Hacemos el push al final ya con el resultado
                 s.Push(resultado);
             }
@@ -559,6 +561,8 @@ namespace Sintaxis_1
             PorFactor();
         }
         //PorFactor -> (OperadorFactor Factor)?
+
+        //SECTION - PorFactor
         private void PorFactor()
         {
             if (Clasificacion == Tipos.OperadorFactor)
@@ -569,7 +573,7 @@ namespace Sintaxis_1
                 //Console.Write(operador + " ");
                 float n1 = s.Pop();
                 float n2 = s.Pop();
-                
+
                 //REVIEW - Cree un float donde se aguarda el resultado y pushearlo al final
                 float resultado = 0;
                 switch (operador)
@@ -580,18 +584,19 @@ namespace Sintaxis_1
                 }
                 Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado);
                 //NOTE - Se hace lo mismo que antes
-                if (huboCasteo) 
+                if (huboCasteo)
                 {
-                    maximoTipo = tipoCasteo; 
+                    maximoTipo = tipoCasteo;
                 }
-                else if (maximoTipo < tipoResultado) 
+                else if (maximoTipo < tipoResultado)
                 {
                     maximoTipo = tipoResultado;
                 }
-                        
+
                 s.Push(resultado);
             }
         }
+        //!SECTION
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
@@ -664,7 +669,7 @@ namespace Sintaxis_1
                     switch (tipoCasteo)
                     {
                         case Variable.TipoDato.Int:
-                            valor = (int)valor;
+                            valor = (int)valor % 65535;
                             break;
 
                         //NOTE - Eliminamos numeros decimales y pasamos a float por la naturaleza de la variable a la que se asigna
@@ -681,7 +686,7 @@ namespace Sintaxis_1
                     }
                     //Obligamos el casteo
                     maximoTipo = tipoCasteo;
-                    s.Push(valor);
+                    s.Push(valor);
                 }
                 match(")");
             }
