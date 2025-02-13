@@ -1,6 +1,13 @@
 Archivo: prueba.cpp
-Fecha y hora: 13/02/2025 01:28:19 p. m.
+Fecha y hora: 13/02/2025 04:08:45 p. m.
 ----------------------------------
 Constructor lenguaje
 Lista de variables: 
+a Char 5
+b Int 2
+c Float 3
+d Char 4
+e Int 4
 f Char 2
+g Float 5
+h Int 2
