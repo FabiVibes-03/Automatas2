@@ -587,7 +587,6 @@ namespace Sintaxis_1
         //MasTermino -> (OperadorTermino Termino)?
         private void MasTermino()
         {
-            maximoTipo = Variable.TipoDato.Char;
             if (Clasificacion == Tipos.OperadorTermino)
             {
                 string operador = Contenido;
@@ -665,6 +664,7 @@ namespace Sintaxis_1
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
+            maximoTipo = Variable.TipoDato.Char;
             // Caso 1: Si es un número
             if (Clasificacion == Tipos.Numero)
             {
@@ -702,18 +702,6 @@ namespace Sintaxis_1
                 match(Tipos.Identificador);
             }
             // Caso 3: Si es una expresión entre paréntesis
-            //ANCHOR - Agregar aquí una validación en caso de ser identificador
-            else if (Clasificacion == Tipos.Caracter)
-            {
-                float valor = (float)Contenido[1];
-                Variable.TipoDato tipoValor = Variable.TipoDato.Char;
-                if (maximoTipo < tipoValor)
-                {
-                    maximoTipo = tipoValor;
-                }
-                s.Push(valor);
-                match(Tipos.Caracter);
-            }
             else
             {
                 match("(");

@@ -223,11 +223,9 @@ namespace Sintaxis_1
 
             return c switch
             {
-                _ when char.IsWhiteSpace(c) => 0,
-                _ when char.IsDigit(c) => 2,
-                '.' => 3,
+                _ when c == '\n' => 23,
                 'e' or 'E' => 4,
-                _ when char.IsLetter(c) => 1,
+                '.' => 3,
                 '+' => 5,
                 '-' => 6,
                 ';' => 7,
@@ -246,9 +244,12 @@ namespace Sintaxis_1
                 '\'' => 20,
                 '#' => 21,
                 '/' => 22,
-                _ when c == '\n' => 23,
                 _ when finArchivo() => 24,
+                _ when char.IsWhiteSpace(c) => 0,
+                _ when char.IsLetter(c) => 1,
+                _ when char.IsDigit(c) => 2,
                 _ => 25
+
             };
         }
         private void Clasifica(int estado)
