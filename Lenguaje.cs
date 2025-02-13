@@ -600,6 +600,7 @@ namespace Sintaxis_1
         //Factor -> numero | identificador | (Expresion)
         private void Factor()
         {
+            maximoTipo = Variable.TipoDato.Char;
             // Caso 1: Si es un número
             if (Clasificacion == Tipos.Numero)
             {
