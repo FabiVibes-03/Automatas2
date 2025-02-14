@@ -8,16 +8,18 @@ static void Main(string[] args)
   //PRUEBAS CON CHAR
   char a;
 
+  //REVIEW - Si descomento este bloque ya no me da el error en la fila 22
   //char + int = int -> Error
   a = 1;
   int b = 2;
-//  a = a + b; //Error
+  //a = a + b; //Error
   a = (char) (a + b); //Bien
+  
 
   //char + float = float -> Error
   a = 1;
   float c = 3;
-  a = a + c; //FIXME - este error no lo marca Error
+  //a = a + c; //FIXME - este error no lo marca Error
   //a = (int) (a + c); //FIXME -Error
   a = (char) (a + c); //Bien
 
@@ -45,51 +47,4 @@ static void Main(string[] args)
   e = e + h; //Bien
   e = (char) (e + h); // Bien
 
-
-  /*if(c != 5) {
-    Console.WriteLine("La suma es distinta de 5");
-
-    if(a == 7) {
-      Console.WriteLine("La variable a es igual a 7");
-    } else {
-      Console.WriteLine("Else ejecutado");
-    }
-  } else {
-    Console.WriteLine("La suma de a + b = " + c);
-  }*/
-
-  /*int b = Console.ReadLine();
-  int a = (3 + 5) * 8 - (10 - 2*b) / b; // 61
-  a--;
-  a+=40;
-  a*=2;
-  a--;
-  a-=99;
-
-  int n = 5;
-
-  for(b = 100; a < n; a++) {
-    b++;
-    while( b != 5 ) {
-      if(n == 5) {
-        Console.WriteLine("5 es igual a " + n + " " + a + " " + b );
-      } else {
-        Console.WriteLine("5 es diferente a " + n);
-      }
-    }
-  }
-
-  if(a % 2 != 0) {
-    Console.WriteLine("Es impar " + a);
-    if(b == 2) {
-      Console.WriteLine("b es igual a 2");
-    } else if( b > 3) {
-      Console.WriteLine("b es mayor a 3 y vale " + b);
-    }
-    else {
-      Console.WriteLine("b no es igual a 2 y vale " + b);
-    }
-  } else {
-    Console.WriteLine("Es impar");
-  }*/
 }

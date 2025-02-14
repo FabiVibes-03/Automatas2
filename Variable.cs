@@ -47,14 +47,15 @@ namespace Sintaxis_1
         {
             return tipo;
         }
-        public static TipoDato valorTipoDato(float valor, bool Casteo = false)
+        public static TipoDato valorTipoDato(float valor, TipoDato maxTipo,bool Casteo = false)
         {
             //REVIEW - Cambie la logica de esta comparativa para agregar el caso de casteo
             if (valor % 1 != 0)  
             {
                 return TipoDato.Float;
             }
-            else if(Casteo)
+            
+            if(Casteo)
             {
                 if (valor >= 0 && valor <= 255)
                 {
@@ -62,14 +63,19 @@ namespace Sintaxis_1
                 }
                 return TipoDato.Int;
             }
-            else
+
+            //Si el entero proviene de un float, obliga a que sea float
+            if (maxTipo == TipoDato.Float)  
             {
-                if (valor >= 0 && valor <= 9)
-                {
-                    return TipoDato.Char;
-                }
-                return TipoDato.Int;
+                return TipoDato.Float;
             }
+
+            if (valor >= 0 && valor <= 9)
+            {
+                return TipoDato.Char;
+            }
+
+            return TipoDato.Int;
        }
     }
 
