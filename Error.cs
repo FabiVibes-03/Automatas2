@@ -18,7 +18,7 @@ namespace Sintaxis_1
         }
         public Error(string message, StreamWriter log, int linea, int columna) : base(message + " en la linea [" + linea + "] columna [" + columna + "]")
         {
-            log.WriteLine("Error: " + message + "en la linea [" + linea + "] en la columna [" + columna + "]");
+            log.WriteLine("Error: " + message + " en la linea [" + linea + "] en la columna [" + columna + "]");
         }
     }
 }
