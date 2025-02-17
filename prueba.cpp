@@ -38,7 +38,7 @@ static void Main(string[] args)
   //int + float = float -> Error
   e = 256;
   float g = 5;
- // e = e + g; //FIXME - este error no lo marca Error
+  e = e + g; //FIXME - este error no lo marca Error
   e = (int) (e + g); // Bien
 
   //int + int = int -> Bien
