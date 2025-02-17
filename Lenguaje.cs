@@ -611,25 +611,25 @@ namespace Sintaxis_1
                     case "-": resultado = n2 - n1; break;
                 }
 
-                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado, maximoTipo, huboCasteo); 
+                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado, maximoTipo, huboCasteo);
                 //Si uno de los valores es float, el resultado sera float
                 if (maximoTipo == Variable.TipoDato.Float || tipoResultado == Variable.TipoDato.Float)
                 {
                     tipoResultado = Variable.TipoDato.Float;
                 }
-                
+
                 //NOTE - Esto evalua si existe oh no
                 if (huboCasteo)
                 {
                     maximoTipo = tipoCasteo;
                 }
-                else 
+                else
                 {
                     if (maximoTipo == Variable.TipoDato.Float || tipoResultado == Variable.TipoDato.Float)
                     {
                         maximoTipo = Variable.TipoDato.Float;
                     }
-                    else if (maximoTipo < tipoResultado) 
+                    else if (maximoTipo < tipoResultado)
                     {
                         maximoTipo = tipoResultado;
                     }
@@ -665,7 +665,7 @@ namespace Sintaxis_1
                     case "/": resultado = n2 / n1; break;
                     case "%": resultado = n2 % n1; break;
                 }
-                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado, maximoTipo, huboCasteo); 
+                Variable.TipoDato tipoResultado = Variable.valorTipoDato(resultado, maximoTipo, huboCasteo);
                 if (maximoTipo == Variable.TipoDato.Float || tipoResultado == Variable.TipoDato.Float)
                 {
                     tipoResultado = Variable.TipoDato.Float;
@@ -676,14 +676,14 @@ namespace Sintaxis_1
                 {
                     maximoTipo = tipoCasteo;
                 }
-                else 
+                else
                 {
                     //NOTE - Nos aseguramos que char y float como int y float, el resultado sea float
                     if (maximoTipo == Variable.TipoDato.Float || tipoResultado == Variable.TipoDato.Float)
                     {
                         maximoTipo = Variable.TipoDato.Float;
                     }
-                    else if (maximoTipo < tipoResultado) 
+                    else if (maximoTipo < tipoResultado)
                     {
                         maximoTipo = tipoResultado;
                     }
@@ -704,7 +704,7 @@ namespace Sintaxis_1
             {
                 //Contenido lo pasamos a valor
                 float valor = float.Parse(Contenido);
-                Variable.TipoDato tipoValor = Variable.valorTipoDato(valor, maximoTipo,huboCasteo);
+                Variable.TipoDato tipoValor = Variable.valorTipoDato(valor, maximoTipo, huboCasteo);
                 // Verifica el tipo de dato máximo necesario para el número
                 if (maximoTipo < tipoValor)
                 {
@@ -768,12 +768,12 @@ namespace Sintaxis_1
                     switch (tipoCasteo)
                     {
                         case Variable.TipoDato.Int:
-                            valor = (int)valor % MathF.Pow(2, 16);
+                            valor = valor % MathF.Pow(2, 16);
                             break;
 
                         //NOTE - Eliminamos numeros decimales y pasamos a float por la naturaleza de la variable a la que se asigna
                         case Variable.TipoDato.Char:
-                            valor = (float)((int)valor % Math.Pow(2, 8));
+                            valor = valor % MathF.Pow(2, 8);
                             break;
 
                         default:
