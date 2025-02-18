@@ -78,7 +78,12 @@ namespace Sintaxis_1
                 log.WriteLine("Fecha y hora: " + ahora.ToString());
                 log.WriteLine("----------------------------------");
             }
-            else if (Path.GetExtension(nombreArchivo) != ".cpp")
+            else
+            {
+                throw new FileNotFoundException("El archivo " + nombreArchivo + " no existe");    /* Defino una excepción que indica que existe un error con el archivo en caso de no ser encontrado */
+            }        
+            
+            if (Path.GetExtension(nombreArchivo) != ".cpp")
             {
                 throw new ArgumentException("El archivo debe ser de extensión .cpp");
             }
