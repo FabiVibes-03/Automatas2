@@ -87,6 +87,7 @@ namespace Sintaxis_1
                 throw new FileNotFoundException("La extensión " + Path.GetExtension(nombreArchivo) + " no existe");    /* Defino una excepción que indica que existe un error con el archivo en caso de no ser encontrado */
             }
         }
+
         public void Dispose()
         {
             archivo.Close();
