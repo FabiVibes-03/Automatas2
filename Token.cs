@@ -24,7 +24,17 @@ namespace Sintaxis_1
             clasificacion = Tipos.Identificador;
         }
         //NOTE - le asignamos un valor por defecto al iniciar la propiedad
-        public string Contenido { get; set; } = "";
-        public Tipos Clasificacion { get; set; } = Tipos.Identificador;
+        public string Contenido
+        {
+            get => contenido;
+            set { contenido = value; }
+        }
+
+        public Tipos Clasificacion
+        {
+            get => clasificacion;
+            set { clasificacion = value; }
+        }
+
     }
 }

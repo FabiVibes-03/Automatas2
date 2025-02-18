@@ -1,5 +1,5 @@
 Archivo: prueba.cpp
-Fecha y hora: 17/02/2025 11:24:29 a. m.
+Fecha y hora: 18/02/2025 11:54:09 a. m.
 ----------------------------------
 Constructor lenguaje
-Error: Semántico: no se puede asignar un Float a un Inten la linea [41] en la columna [13]
+Error: Semántico: no se puede asignar un Float a un Int en la linea [41] en la columna [13]

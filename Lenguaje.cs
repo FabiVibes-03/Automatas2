@@ -775,13 +775,6 @@ namespace Sintaxis_1
                         case Variable.TipoDato.Char:
                             valor = valor % MathF.Pow(2, 8);
                             break;
-
-                        default:
-                            if (tipoCasteo != Variable.TipoDato.Float)
-                            {
-                                throw new Error("Sintaxis: tipo de dato no soportado para casteo", log, linea, columna);
-                            }
-                            break;
                     }
                     //Obligamos el casteo
                     maximoTipo = tipoCasteo;

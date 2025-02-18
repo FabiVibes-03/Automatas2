@@ -68,6 +68,10 @@ namespace Sintaxis_1
             string nombreArchivoWithoutExt = Path.GetFileNameWithoutExtension(nombreArchivo);   /* Obtenemos el nombre del archivo sin la extensión para poder crear el .log y .asm */
             if (File.Exists(nombreArchivo))
             {
+                if (Path.GetExtension(nombreArchivo) != ".cpp")
+                {
+                    throw new ArgumentException("El archivo debe ser de extensión .cpp");
+                }
                 log = new StreamWriter(nombreArchivoWithoutExt + ".log");
                 asm = new StreamWriter(nombreArchivoWithoutExt + ".asm");
                 log.AutoFlush = true;
@@ -81,11 +85,6 @@ namespace Sintaxis_1
             else
             {
                 throw new FileNotFoundException("El archivo " + nombreArchivo + " no existe");    /* Defino una excepción que indica que existe un error con el archivo en caso de no ser encontrado */
-            }
-
-            if (Path.GetExtension(nombreArchivo) != ".cpp")
-            {
-                throw new ArgumentException("El archivo debe ser de extensión .cpp");
             }
         }
 
