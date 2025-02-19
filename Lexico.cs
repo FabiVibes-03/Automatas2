@@ -16,6 +16,8 @@ namespace Sintaxis_1
     {
         public StreamReader archivo; //Archivo de entrada
         public StreamWriter log; //Archivo de salida
+        public StreamWriter error = new StreamWriter("Error.log"); //Archivo de salida
+        DateTime ahora = DateTime.Now; //Fecha y hora
         public StreamWriter asm; //Archivo de salida
         public int linea = 1; //Número de línea
         const int F = -1; //Estado de aceptación final
@@ -66,25 +68,27 @@ namespace Sintaxis_1
         {
 
             string nombreArchivoWithoutExt = Path.GetFileNameWithoutExtension(nombreArchivo);   /* Obtenemos el nombre del archivo sin la extensión para poder crear el .log y .asm */
+            error.AutoFlush = true;
+
             if (File.Exists(nombreArchivo))
             {
                 if (Path.GetExtension(nombreArchivo) != ".cpp")
                 {
-                    throw new ArgumentException("El archivo debe ser de extensión .cpp");
+                    throw new Error("El archivo debe ser de extensión .cpp", error);
                 }
                 log = new StreamWriter(nombreArchivoWithoutExt + ".log");
                 asm = new StreamWriter(nombreArchivoWithoutExt + ".asm");
                 log.AutoFlush = true;
                 asm.AutoFlush = true;
                 archivo = new StreamReader(nombreArchivo);
-                DateTime ahora = DateTime.Now;
+                //DateTime ahora = DateTime.Now;
                 log.WriteLine("Archivo: " + nombreArchivo);
                 log.WriteLine("Fecha y hora: " + ahora.ToString());
                 log.WriteLine("----------------------------------");
             }
             else
             {
-                throw new FileNotFoundException("El archivo " + nombreArchivo + " no existe");    /* Defino una excepción que indica que existe un error con el archivo en caso de no ser encontrado */
+                throw new Error("El archivo " + nombreArchivo + " no existe", error);    /* Defino una excepción que indica que existe un error con el archivo en caso de no ser encontrado */
             }
         }
 
